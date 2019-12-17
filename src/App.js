@@ -46,6 +46,7 @@ class App extends Component {
 class Keyboard extends Component {
   render() {
     return (
+    <div>
       <div className="keyboard-line">
         <button onClick={() => this.props.addLetter("A")}>A</button>
         <button onClick={this.props.addLetter.bind(this, "B")}>B</button>
@@ -53,6 +54,28 @@ class Keyboard extends Component {
         <button onClick={this.props.addLetter.bind(this, "D")}>D</button>
         <button onClick={this.props.addLetter.bind(this, "E")}>E</button>
         <button onClick={this.props.addLetter.bind(this, "F")}>F</button>
+        <button onClick={this.props.addLetter.bind(this, "G")}>G</button>
+        <button onClick={this.props.addLetter.bind(this, "H")}>H</button>
+        <button onClick={this.props.addLetter.bind(this, "I")}>I</button>
+        <button onClick={this.props.addLetter.bind(this, "K")}>K</button>
+        <button onClick={this.props.addLetter.bind(this, "L")}>L</button>
+        <button onClick={this.props.addLetter.bind(this, "M")}>M</button>
+        <button onClick={this.props.addLetter.bind(this, "N")}>N</button>
+        <button onClick={this.props.addLetter.bind(this, "O")}>O</button>
+      </div>
+      <div>
+        <button onClick={this.props.addLetter.bind(this, "P")}>P</button>
+        <button onClick={this.props.addLetter.bind(this, "Q")}>Q</button>
+        <button onClick={this.props.addLetter.bind(this, "R")}>R</button>
+        <button onClick={this.props.addLetter.bind(this, "S")}>S</button>
+        <button onClick={this.props.addLetter.bind(this, "T")}>T</button>
+        <button onClick={this.props.addLetter.bind(this, "U")}>U</button>
+        <button onClick={this.props.addLetter.bind(this, "V")}>V</button>
+        <button onClick={this.props.addLetter.bind(this, "W")}>W</button>
+        <button onClick={this.props.addLetter.bind(this, "X")}>X</button>
+        <button onClick={this.props.addLetter.bind(this, "Y")}>Y</button>
+        <button onClick={this.props.addLetter.bind(this, "Z")}>Z</button>
+      </div>
       </div>
     );
   }
