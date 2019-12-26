@@ -1,83 +1,119 @@
 import React, { Component} from "react";
 import ReactDOM from "react-dom";
+import Keyboard from './Keyboard.js'
+import './Keyboard.css'
 import './App.css';
+import './Letter.css'
+import Letter from './Letter.js'
 
 
-    // Produit une représentation textuelle de l’état de la partie,
-    // chaque lettre non découverte étant représentée par un _underscore_.
-    // (CSS assurera de l’espacement entre les lettres pour mieux
-    // visualiser le tout).
-    function computeDisplay(phrase, usedLetters) {
-      return phrase.replace(/\w/g,
-        (letter) => (usedLetters.has(letter) ? letter+' ' : '_ ')
-      )
-    }
+
+  const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+  const allword = ["NOMBRE","GEANTE","CORAUX","ROULEAU","EJECTER","LIVRETS",
+                "DIVISION","LICORNES","FOURNEAU","EMPLETTE","CLEPSYDRE","INDIGENES",
+                "ECLATANTE","MATERIAUX","ANAGRAMME","ULTERIEURE","FACTORISER",
+                "RACCROCHER","HIPPOPOTAME","SAUTERELLES"]
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      phrase: "ARBRE",
-      hidden: true
+      letters: this.generateMot(),
+      keyboard: this.generateKeyboard(),
+      selection : [],
+      gameState: "en cours"
     };
   }
 
-  methodInState = letter => {
-    this.setState({
-      phrase: letter
-    });
-  };
-  
-  render() {
-      return (
-      <div className="App">
-        <header className="App-header">
-        <div>
-          <span>{this.state.phrase}</span>
-            <Keyboard addLetter={this.methodInState.bind(this)} />
-          </div>
-        </header>
-      </div>
-    )
+  generateMot() {
+    const result = []
+    let oneWord = Math.floor(Math.random()* allword.length)
+    oneWord = allword[oneWord]
+    const word = oneWord.split('')
+    while (word.length>0) {
+      const letter = word.shift()
+      result.push(letter)
+    }
+    return result
   }
-}
 
-class Keyboard extends Component {
+  generateKeyboard() {
+    const result = []
+    const size = 26
+    const allLetters = alphabet.split('')
+    while (result.length < size) {
+      const letter = allLetters.shift()
+      result.push(letter)
+    }
+    return result
+  }
+
+  getFeedback(letter) {
+    const { selection } = this.state
+    return selection.includes(letter)
+  }
+
+  handleClick = letter => {
+    const { selection, gameState } = this.state
+    if(gameState == "en cours") {
+      this.setState({selection: [...selection, letter]}, this.gameState)
+    }
+  }
+
+  newGame = () => {
+    this.setState({selection: [], letters: this.generateWords(), gameState : "en cours" })
+  }
+
+  trying = () => {
+    const {letters, selection} = this.state
+    return selection.filter(elt => !letters.includes(elt)).length
+  }
+
+  gameState = () => {
+    const {letters, selection} = this.state
+    const lastTests = 10 - this.trying()
+    const findWord = letters.filter(elt => selection.includes(elt)).length === letters.length
+    if (lastTests > 0 && findWord) {
+      this.setState({gameState : "gagnée"})
+    } else if (lastTests > 0 ) {
+      return
+    } else {
+      this.setState({gameState : "perdue"})
+    }
+  }
+
   render() {
-    return (
-    <div>
-      <div className="keyboard-line">
-        <button onClick={() => this.props.addLetter("A")}>A</button>
-        <button onClick={this.props.addLetter.bind(this, "B")}>B</button>
-        <button onClick={this.props.addLetter.bind(this, "C")}>C</button>
-        <button onClick={this.props.addLetter.bind(this, "D")}>D</button>
-        <button onClick={this.props.addLetter.bind(this, "E")}>E</button>
-        <button onClick={this.props.addLetter.bind(this, "F")}>F</button>
-        <button onClick={this.props.addLetter.bind(this, "G")}>G</button>
-        <button onClick={this.props.addLetter.bind(this, "H")}>H</button>
-        <button onClick={this.props.addLetter.bind(this, "I")}>I</button>
-        <button onClick={this.props.addLetter.bind(this, "K")}>K</button>
-        <button onClick={this.props.addLetter.bind(this, "L")}>L</button>
-        <button onClick={this.props.addLetter.bind(this, "M")}>M</button>
-        <button onClick={this.props.addLetter.bind(this, "N")}>N</button>
-        <button onClick={this.props.addLetter.bind(this, "O")}>O</button>
-      </div>
+    const { letters, keyboard } = this.state
+
+      return (
+      <div className="App-header">
       <div>
-        <button onClick={this.props.addLetter.bind(this, "P")}>P</button>
-        <button onClick={this.props.addLetter.bind(this, "Q")}>Q</button>
-        <button onClick={this.props.addLetter.bind(this, "R")}>R</button>
-        <button onClick={this.props.addLetter.bind(this, "S")}>S</button>
-        <button onClick={this.props.addLetter.bind(this, "T")}>T</button>
-        <button onClick={this.props.addLetter.bind(this, "U")}>U</button>
-        <button onClick={this.props.addLetter.bind(this, "V")}>V</button>
-        <button onClick={this.props.addLetter.bind(this, "W")}>W</button>
-        <button onClick={this.props.addLetter.bind(this, "X")}>X</button>
-        <button onClick={this.props.addLetter.bind(this, "Y")}>Y</button>
-        <button onClick={this.props.addLetter.bind(this, "Z")}>Z</button>
+
+      <div className="content">
+            { letters.map((letter, index) => (
+              <Letter
+                letter={letter}
+                feedback={this.getFeedback(letter) ? "visible" : "hidden"}
+                key={index}
+              />
+            ))}
       </div>
+
       </div>
-    );
+        <div className="keyboard">
+          { keyboard.map((letter, index) => (
+            <Keyboard
+              letter={letter}
+              key={index}
+              onClick={this.handleClick}
+              feedback={this.getFeedback(letter) ? "gray" : "#17a2b8"}
+              />
+        
+          ))}
+          </div>
+        </div>
+    )
   }
 }
 
